@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- API Configuration ---
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000' 
+        : 'https://edumatrix-bu32.onrender.com';
+
     console.log('extracurricular.js: DOM Content Loaded!');
 
     const form = document.getElementById('extracurricularForm');
@@ -6,45 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const summarySection = document.getElementById('summarySection');
     const formSection = document.getElementById('formSection');
 
-    // Check if these core elements exist
     if (!form || !editBtn || !summarySection || !formSection) {
-        console.error('extracurricular.js: One or more critical HTML elements are missing. Check IDs: extracurricularForm, editBtn, summarySection, formSection');
-        // Prevent further script execution if crucial elements are missing
+        console.error('extracurricular.js: One or more critical HTML elements are missing.');
         alert('Page setup error: Cannot find form or summary sections. Please check HTML.');
         return;
     }
 
     const numHackathonsInput = document.getElementById('numHackathons');
     const hackathonDetailsContainer = document.getElementById('hackathonDetailsContainer');
-
     const numEventsInput = document.getElementById('numEvents');
     const eventDetailsContainer = document.getElementById('eventDetailsContainer');
-
     const numAwardsInput = document.getElementById('numAwards');
     const awardDetailsContainer = document.getElementById('awardDetailsContainer');
-
     const numCertificatesInput = document.getElementById('numCertificates');
     const certificateDetailsContainer = document.getElementById('certificateDetailsContainer');
 
     const fieldsets = form.querySelectorAll('fieldset');
     let currentStep = 0;
 
-    const userId = sessionStorage.getItem('user_id'); // Get the user ID from session storage
+    const userId = sessionStorage.getItem('user_id');
     console.log('extracurricular.js: Retrieved userId from sessionStorage:', userId);
 
     if (!userId) {
         alert('User not logged in. Please log in to manage extracurricular details.');
-        console.error('extracurricular.js: User ID is missing in sessionStorage. Script execution stopped for data fetch/display.');
-        // Optionally redirect to login page
-        // window.location.href = 'login.html';
-        // Still attempt to show form in case user is meant to fill out first time
         summarySection.style.display = 'none';
         formSection.style.display = 'block';
-        if (fieldsets.length > 0) goToStep(0); // Only go to step if fieldsets exist
-        return; // Stop further execution if no user ID
+        if (fieldsets.length > 0) goToStep(0);
+        return;
     }
 
-    // Stores fetched data for pre-filling
     let fetchedData = {
         hackathons: [],
         events: [],
@@ -52,13 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
         certificates: []
     };
 
-    // Helper: generate dynamic inputs and handle add/remove correctly
     function generateInputs(container, prefix, count, fields, existingData = []) {
         const currentCount = container.children.length;
         console.log(`Generating inputs for ${prefix}: current=${currentCount}, target=${count}`);
 
         if (count > currentCount) {
-            // Add inputs
             for (let i = currentCount; i < count; i++) {
                 const div = document.createElement('div');
                 div.classList.add(prefix + '-group');
@@ -90,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.appendChild(div);
             }
         } else if (count < currentCount) {
-            // Remove extra inputs
             for (let i = currentCount - 1; i >= count; i--) {
                 const childToRemove = container.querySelector(`.${prefix}-group[data-index="${i}"]`);
                 if (childToRemove) container.removeChild(childToRemove);
@@ -98,12 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Capitalize first letter helper
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // Define field structures for each category, mapping to DB column names
     const fieldDefinitions = {
         hackathon: [
             { name: 'Role', label: 'Role in Hackathon', type: 'text', placeholder: 'e.g., Developer', required: true, dbName: 'role' },
@@ -130,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
     };
 
-    // --- Event listeners for number inputs to generate fields ---
     numHackathonsInput.addEventListener('input', () => {
         const count = parseInt(numHackathonsInput.value) || 0;
         generateInputs(hackathonDetailsContainer, 'hackathon', count, fieldDefinitions.hackathon, fetchedData.hackathons);
@@ -151,10 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         generateInputs(certificateDetailsContainer, 'certificate', count, fieldDefinitions.certificate, fetchedData.certificates);
     });
 
-    // --- Navigation buttons: next & back ---
     form.querySelectorAll('.next-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            console.log('Next button clicked. Current step:', currentStep);
             if (!validateStep(currentStep)) return;
             goToStep(currentStep + 1);
         });
@@ -162,28 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.querySelectorAll('.back-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            console.log('Back button clicked. Current step:', currentStep);
             goToStep(currentStep - 1);
         });
     });
 
-    // Show specified step in multi-step form
     function goToStep(step) {
-        if (step < 0 || step >= fieldsets.length) {
-            console.warn(`goToStep: Invalid step requested: ${step}. Total fieldsets: ${fieldsets.length}`);
-            return;
-        }
-        console.log(`Transitioning from step ${currentStep} to step ${step}`);
+        if (step < 0 || step >= fieldsets.length) return;
         fieldsets[currentStep].classList.remove('active');
         fieldsets[step].classList.add('active');
         currentStep = step;
-        // Also ensure visibility via display property for smooth transitions
         fieldsets.forEach((fs, idx) => {
             fs.style.display = (idx === currentStep) ? 'block' : 'none';
         });
     }
 
-    // Basic validation: check required inputs in current step
     function validateStep(step) {
         const inputs = fieldsets[step].querySelectorAll('input[required], textarea[required]');
         let isValid = true;
@@ -192,114 +171,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.focus();
                 alert('Please fill all required fields in this section.');
                 isValid = false;
-                break; // Stop at the first invalid input
+                break;
             }
         }
-        console.log(`Validation for step ${step}: ${isValid ? 'Passed' : 'Failed'}`);
         return isValid;
     }
 
-    // --- Initial Load: Fetch and Display Summary or Form ---
     async function fetchAndDisplayExtracurricular() {
         console.log('extracurricular.js: fetchAndDisplayExtracurricular called.');
 
-        // Initialize counts to 0 by default, these will always be displayed
-        let hackathonsCount = 0;
-        let eventsCount = 0;
-        let awardsCount = 0;
-        let certificatesCount = 0;
-
-        // Ensure summary elements are updated immediately with 0s
-        document.getElementById('summaryHackathons').textContent = hackathonsCount;
-        document.getElementById('summaryEvents').textContent = eventsCount;
-        document.getElementById('summaryAwards').textContent = awardsCount;
-        document.getElementById('summaryCertificates').textContent = certificatesCount;
-        console.log('extracurricular.js: Summary counts initialized to 0.');
-
-
         try {
-            const response = await fetch(`http://localhost:3000/api/extracurricular/${userId}`);
-            console.log('extracurricular.js: API response status for fetch:', response.status);
+            const response = await fetch(`${API_BASE_URL}/api/extracurricular/${userId}`);
 
             if (response.status === 404) {
-                console.log('extracurricular.js: No records found (404). Showing form.');
-                summarySection.style.display = 'none';
-                formSection.style.display = 'block';
-                goToStep(0); // Go to the first step of the form
-
-                // Reset number inputs and clear containers for new entry
-                numHackathonsInput.value = 0;
-                numEventsInput.value = 0;
-                numAwardsInput.value = 0;
-                numCertificatesInput.value = 0;
-
-                // Trigger input events to ensure dynamic fields are cleared/generated
-                numHackathonsInput.dispatchEvent(new Event('input'));
-                numEventsInput.dispatchEvent(new Event('input'));
-                numAwardsInput.dispatchEvent(new Event('input'));
-                numCertificatesInput.dispatchEvent(new Event('input'));
-
-            } else if (response.ok) { // Status 200 (OK)
+                // No data found - show the form
+                showForm();
+            } else if (response.ok) {
                 const data = await response.json();
-                console.log('extracurricular.js: Data fetched successfully:', data);
                 fetchedData.hackathons = data.hackathons || [];
                 fetchedData.events = data.events || [];
                 fetchedData.awards = data.awards || [];
                 fetchedData.certificates = data.certificates || [];
 
-                hackathonsCount = fetchedData.hackathons.length;
-                eventsCount = fetchedData.events.length;
-                awardsCount = fetchedData.awards.length;
-                certificatesCount = fetchedData.certificates.length;
+                const hackathonsCount = fetchedData.hackathons.length;
+                const eventsCount = fetchedData.events.length;
+                const awardsCount = fetchedData.awards.length;
+                const certificatesCount = fetchedData.certificates.length;
 
-                // Update summary with actual fetched counts
                 document.getElementById('summaryHackathons').textContent = hackathonsCount;
                 document.getElementById('summaryEvents').textContent = eventsCount;
                 document.getElementById('summaryAwards').textContent = awardsCount;
                 document.getElementById('summaryCertificates').textContent = certificatesCount;
-                console.log('extracurricular.js: Summary counts updated with fetched data.');
 
-                summarySection.style.display = 'block'; // SHOW SUMMARY
-                formSection.style.display = 'none'; // HIDE FORM
-
+                // Check if there's any data - if not, show form
+                if (hackathonsCount === 0 && eventsCount === 0 && awardsCount === 0 && certificatesCount === 0) {
+                    showForm();
+                } else {
+                    // Show summary
+                    summarySection.style.display = 'block';
+                    formSection.style.display = 'none';
+                }
             } else {
-                console.error('extracurricular.js: Error fetching data. Status:', response.status, response.statusText);
-                alert('Failed to load extracurricular data due to a server error. Please try again.');
-                summarySection.style.display = 'none'; // Hide summary on error
-                formSection.style.display = 'block'; // Show form as fallback
-                goToStep(0); // Go to the first step of the form
+                showForm();
             }
-
         } catch (error) {
-            console.error('extracurricular.js: Network or unhandled error during fetch:', error);
-            alert('An error occurred while fetching data. Please check your network connection and the server.');
-            summarySection.style.display = 'none'; // Hide summary on network error
-            formSection.style.display = 'block'; // Show form as fallback
-            goToStep(0); // Go to the first step of the form
+            console.error('extracurricular.js: Network error:', error);
+            // On error, show the form
+            showForm();
         }
     }
 
-    // --- Form Submission Handler ---
+    function showForm() {
+        summarySection.style.display = 'none';
+        formSection.style.display = 'block';
+        goToStep(0);
+        numHackathonsInput.value = 0;
+        numEventsInput.value = 0;
+        numAwardsInput.value = 0;
+        numCertificatesInput.value = 0;
+        numHackathonsInput.dispatchEvent(new Event('input'));
+        numEventsInput.dispatchEvent(new Event('input'));
+        numAwardsInput.dispatchEvent(new Event('input'));
+        numCertificatesInput.dispatchEvent(new Event('input'));
+    }
+
     form.addEventListener('submit', async e => {
         e.preventDefault();
-        console.log('extracurricular.js: Form submission initiated.');
-
-        // Final validation for the current step (which should be the last step for submission)
-        if (!validateStep(currentStep)) {
-            console.warn('extracurricular.js: Final validation failed on submission.');
-            return;
-        }
+        if (!validateStep(currentStep)) return;
 
         const formData = new FormData(form);
         const submissionData = {
-            userId: userId, // Include user ID
+            userId: userId,
             hackathons: [],
             events: [],
             awards: [],
             certificates: []
         };
 
-        // Helper to process form data for a category
         const processCategory = (numInput, prefix, fieldDefs, targetArray) => {
             const count = parseInt(numInput.value) || 0;
             for (let i = 0; i < count; i++) {
@@ -316,85 +264,63 @@ document.addEventListener('DOMContentLoaded', () => {
         processCategory(numAwardsInput, 'award', fieldDefinitions.award, submissionData.awards);
         processCategory(numCertificatesInput, 'certificate', fieldDefinitions.certificate, submissionData.certificates);
 
-        console.log('extracurricular.js: Submission data prepared:', submissionData);
-
         try {
-            const response = await fetch('http://localhost:3000/api/extracurricular', {
+            const response = await fetch(`${API_BASE_URL}/api/extracurricular`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(submissionData),
             });
 
             const result = await response.json();
-            console.log('extracurricular.js: Server response to submission:', result);
-
             if (response.ok) {
                 alert(result.message || 'Extracurricular details saved successfully!');
-                // Re-fetch and display the updated summary
-                await fetchAndDisplayExtracurricular(); // This will refresh the summary counts
-                goToStep(0); // Reset form to first step (it will be hidden by fetchAndDisplayExtracurricular)
+                await fetchAndDisplayExtracurricular();
+                goToStep(0);
             } else {
                 alert(result.message || 'Failed to save extracurricular details.');
-                console.error('extracurricular.js: Error saving extracurricular details:', result);
             }
         } catch (error) {
-            console.error('extracurricular.js: Network error during submission:', error);
-            alert('An error occurred. Please check your network and try again.');
+            console.error('extracurricular.js: Network error:', error);
+            alert('An error occurred. Please check your network.');
         }
     });
 
-    // --- Edit button loads saved data back into form ---
     editBtn.addEventListener('click', async () => {
-        console.log('extracurricular.js: Edit button clicked.');
-        // Show form, hide summary
         summarySection.style.display = 'none';
         formSection.style.display = 'block';
 
-        // Clear all detail containers before re-generating with fetched data
         hackathonDetailsContainer.innerHTML = '';
         eventDetailsContainer.innerHTML = '';
         awardDetailsContainer.innerHTML = '';
         certificateDetailsContainer.innerHTML = '';
-        console.log('extracurricular.js: Cleared dynamic input containers.');
 
-        // Fetch the latest data to populate the form for editing
         try {
-            const response = await fetch(`http://localhost:3000/api/extracurricular/${userId}`);
+            const response = await fetch(`${API_BASE_URL}/api/extracurricular/${userId}`);
             const data = await response.json();
-            console.log('extracurricular.js: Data fetched for editing:', data);
 
             fetchedData.hackathons = data.hackathons || [];
             fetchedData.events = data.events || [];
             fetchedData.awards = data.awards || [];
             fetchedData.certificates = data.certificates || [];
 
-            // Set number inputs and trigger their 'input' events to generate dynamic fields
-            // The generateInputs function uses `WorkspaceedData` to pre-fill
             numHackathonsInput.value = fetchedData.hackathons.length;
             numHackathonsInput.dispatchEvent(new Event('input'));
-
             numEventsInput.value = fetchedData.events.length;
             numEventsInput.dispatchEvent(new Event('input'));
-
             numAwardsInput.value = fetchedData.awards.length;
             numAwardsInput.dispatchEvent(new Event('input'));
-
             numCertificatesInput.value = fetchedData.certificates.length;
             numCertificatesInput.dispatchEvent(new Event('input'));
 
-            console.log('extracurricular.js: Form populated with fetched data.');
-            goToStep(0); // Go to the first step of the form
+            goToStep(0);
         } catch (error) {
-            console.error('extracurricular.js: Error fetching data for edit:', error);
-            alert('Failed to load data for editing. Please try again.');
-            summarySection.style.display = 'block'; // Fallback to summary
+            console.error('extracurricular.js: Error fetching data:', error);
+            alert('Failed to load data for editing.');
+            summarySection.style.display = 'block';
             formSection.style.display = 'none';
         }
     });
 
-    // Initialize display on page load
-    console.log('extracurricular.js: Initializing display on page load.');
+    console.log('extracurricular.js: Initializing display.');
     fetchAndDisplayExtracurricular();
 });

@@ -80,6 +80,9 @@
           <a class="flex items-center gap-3 hover:text-yellow-400 p-2 rounded" href="#">
             <i class="fas fa-home w-5"></i> Home
           </a>
+          <button id="mobileShareBtn" class="flex items-center gap-3 hover:text-yellow-400 p-2 rounded w-full text-left bg-transparent border-none text-white">
+            <i class="fas fa-share-alt w-5"></i> Share
+          </button>
           <a class="flex items-center gap-3 hover:text-yellow-400 p-2 rounded" href="academic.html">
             <i class="fas fa-chart-bar w-5"></i> My Results
           </a>
@@ -90,21 +93,11 @@
             <i class="fas fa-id-card w-5"></i> Personal Details
           </a>
           <div class="flex items-center gap-3 p-2">
-            <i class="fas fa-cog w-5"></i> 
+            <i class="fas fa-cog w-5"></i> Settings
           </div>
           <button id="themeToggleBtn" class="flex items-center gap-3 hover:text-yellow-400 p-2 rounded w-full text-left bg-transparent border-none">
             <i class="fas fa-moon w-5"></i>
             <span id="themeLabel">Light Mode</span>
-          </button>
-          <!-- Mobile Share Button - Only visible on mobile -->
-          <button id="mobileShareBtn" class="flex items-center gap-3 hover:text-yellow-400 p-2 rounded w-full text-left bg-transparent border-none md:hidden">
-            <i class="fas fa-share-alt w-5"></i>
-            <span>Share</span>
-          </button>
-          <!-- Mobile Emoji Picker Button - Only visible on mobile -->
-          <button id="mobileEmojiBtn" class="flex items-center gap-3 hover:text-yellow-400 p-2 rounded w-full text-left bg-transparent border-none md:hidden">
-            <i class="fas fa-smile w-5"></i>
-            <span>Change Avatar</span>
           </button>
           <button id="logoutBtn" class="flex items-center gap-3 text-red-300 hover:text-red-500 p-2 rounded mt-4 w-full text-left bg-transparent border-none">
             <i class="fas fa-sign-out-alt w-5"></i> Logout
@@ -146,21 +139,16 @@
 
       <!-- Profile Section -->
       <section class="bg-white rounded-xl shadow-md p-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-4">
-          <button id="profileEmojiBtnMobile" class="w-16 h-16 rounded-full bg-[#0b4dbd] text-white text-3xl flex items-center justify-center flex-shrink-0" title="Change avatar">
-            <span id="profileEmojiMobile">😊</span>
+        <div class="text-center md:text-left">
+          <h2 class="text-[#0f292f] font-semibold text-lg mb-2">Your Profile</h2>
+          <p class="text-[#64748b] text-sm">
+            Hi <span class="font-semibold" id="profileUserName">Student</span>, Today is 
+            <span class="font-semibold text-[#0b4dbd]" id="currentDateDisplay">Loading...</span>.
+            You have completed <span class="font-semibold" id="weeklyProgress">70%</span> of your weekly targets.
+          </p>
+          <button id="setGoalsBtn" class="mt-4 bg-yellow-400 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-md hover:bg-yellow-500">
+            Set Goals
           </button>
-          <div class="text-center md:text-left">
-            <h2 class="text-[#0f292f] font-semibold text-lg mb-2">Your Profile</h2>
-            <p class="text-[#64748b] text-sm">
-              Hi <span class="font-semibold" id="profileUserName">Student</span>, Today is 
-              <span class="font-semibold text-[#0b4dbd]" id="currentDateDisplay">Loading...</span>.
-              You have completed <span class="font-semibold" id="weeklyProgress">70%</span> of your weekly targets.
-            </p>
-            <button id="setGoalsBtn" class="mt-4 bg-yellow-400 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-md hover:bg-yellow-500">
-              Set Goals
-            </button>
-          </div>
         </div>
         <img class="w-[120px] h-[100px] object-contain" src="https://storage.googleapis.com/a1aa/image/b169b39f-b15f-4a88-f418-bd0e0e3c5920.jpg" alt="Illustration">
       </section>
@@ -201,16 +189,6 @@
             <p id="personalProgressText" class="text-[#0b4dbd] text-[9px] font-semibold">80%</p>
             <a href="personal-card.html" class="text-[#0b4dbd] text-xs hover:underline mt-2 block">View Details</a>
           </div>
-          
-        <!-- Goals Card -->
-          <div class="bg-[#f1f5f9] rounded-lg p-4 text-center">
-            <h4 class="text-[#0f292f] font-semibold text-sm mb-2">GOALS</h4>
-            <p class="mb-2 text-xs" id="goalsInfoSummary">Your Targets</p>
-            <img class="mx-auto mb-2 w-8 h-8" src="https://cdn-icons-png.flaticon.com/512/2693/2693507.png" alt="Goals">
-            <div class="w-full bg-white rounded-full h-2 mb-1"><div id="goalsProgressBar" class="bg-[#0b4dbd] h-2 rounded-full" style="width: 0%"></div></div>
-            <p id="goalsProgressText" class="text-[#0b4dbd] text-[9px] font-semibold">0%</p>
-            <button id="viewGoalsBtn" class="text-[#0b4dbd] text-xs hover:underline mt-2 block">View Details</button>
-          </div>
         </div>
       </section>
     </main>
@@ -218,11 +196,11 @@
     <!-- Right Panel -->
     <aside class="w-full md:w-64 bg-white flex-col gap-6 p-6 flex right-panel" id="rightPanel">
       <div class="flex justify-between items-center">
-<button id="shareBtn" class="text-[#64748b] hover:text-[#0b4dbd] text-xl hidden md:block"><i class="fas fa-share-alt"></i></button>
+        <button id="shareBtn" class="text-[#64748b] hover:text-[#0b4dbd] text-xl hidden md:block"><i class="fas fa-share-alt"></i></button>
         <button id="closeRightPanel" class="right-panel-close text-gray-500 hover:text-gray-700 text-xl">
           <i class="fas fa-times"></i>
         </button>
-        <button id="profileEmojiBtn" class="w-10 h-10 rounded-full bg-[#0b4dbd] text-white text-xl flex items-center justify-center hidden md:flex" title="Change emoji">
+        <button id="profileEmojiBtn" class="w-10 h-10 rounded-full bg-[#0b4dbd] text-white text-xl flex items-center justify-center" title="Change emoji">
           <span id="profileEmoji">😊</span>
         </button>
       </div>
@@ -396,61 +374,16 @@
       const closeRightPanelBtn = document.getElementById('closeRightPanel');
       closeRightPanelBtn?.addEventListener('click', closeRightPanel);
       
-      // Mobile Share Button handler
+      // Mobile share button functionality
       const mobileShareBtn = document.getElementById('mobileShareBtn');
       const shareModal = document.getElementById('shareModal');
-      const closeShareModal = document.getElementById('closeShareModal');
       
       mobileShareBtn?.addEventListener('click', () => {
         if (shareModal) {
           shareModal.classList.remove('hidden');
           shareModal.classList.add('flex');
         }
-      });
-      
-      closeShareModal?.addEventListener('click', () => {
-        if (shareModal) {
-          shareModal.classList.add('hidden');
-          shareModal.classList.remove('flex');
-        }
-      });
-      
-      // Mobile Emoji Picker handler
-      const mobileEmojiBtn = document.getElementById('mobileEmojiBtn');
-      const emojiModal = document.getElementById('emojiModal');
-      const closeEmojiModal = document.getElementById('closeEmojiModal');
-      
-      mobileEmojiBtn?.addEventListener('click', () => {
-        if (emojiModal) {
-          emojiModal.classList.remove('hidden');
-          emojiModal.classList.add('flex');
-        }
-      });
-      
-      closeEmojiModal?.addEventListener('click', () => {
-        if (emojiModal) {
-          emojiModal.classList.add('hidden');
-          emojiModal.classList.remove('flex');
-        }
-      });
-      
-      // View Goals button handler
-      const viewGoalsBtn = document.getElementById('viewGoalsBtn');
-      const goalsModal = document.getElementById('goalsModal');
-      const closeGoalsModal = document.getElementById('closeGoalsModal');
-      
-      viewGoalsBtn?.addEventListener('click', () => {
-        if (goalsModal) {
-          goalsModal.classList.remove('hidden');
-          goalsModal.classList.add('flex');
-        }
-      });
-      
-      closeGoalsModal?.addEventListener('click', () => {
-        if (goalsModal) {
-          goalsModal.classList.add('hidden');
-          goalsModal.classList.remove('flex');
-        }
+        closeSidebar();
       });
     });
   </script>

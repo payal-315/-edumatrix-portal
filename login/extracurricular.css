@@ -285,11 +285,11 @@ button:hover, .next-btn:hover, .back-btn:hover, .submit-btn:hover {
 
 /* ... (rest of your CSS) ... */
 
-/* Ensure the main sections are initially hidden by default, JS will manage their visibility */
+/* JS will manage their visibility, so we don't hide them by default */
 #summarySection {
-    display: none; /* Add this line */
+    /* display: none; - removed, JS will control this */
 }
 
 #formSection {
-    display: none;
+    /* display: none; - removed, JS will control this */
 }

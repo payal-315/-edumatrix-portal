@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    // --- API Configuration ---
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000' 
+        : 'https://edumatrix-bu32.onrender.com';
+
     // --- 1. VTU Subject Mapping ---
     const VTU_SUBJECTS = {
         "1": ["Mathematics-I", "Applied Physics", "Programming in C", "Engineering Science", "English", "Physics Lab", "C Programming Lab", "Environmental Studies"],
@@ -25,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 } else {
                     label.style.display = 'none';
                     input.required = false;
-                    input.value = ""; // Clear hidden inputs
+                    input.value = "";
                 }
             }
         }
@@ -72,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         };
 
-        // --- UPDATED: Map sub1-sub9 from DB to Form ---
         for (let i = 1; i <= 9; i++) {
             setInputValue(`sub${i}`, data[`sub${i}`]);
         }
@@ -97,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     async function fetchAcademicInfoAndPrefill() {
         try {
-            const response = await fetch(`http://localhost:3000/api/academic-info/${userId}`);
+            const response = await fetch(`${API_BASE_URL}/api/academic-info/${userId}`);
             const result = await response.json();
             allAcademicData = {}; 
 
@@ -136,7 +140,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         currentSection = 1;
     });
 
-    // Navigation Logic
     document.querySelectorAll('.next-btn').forEach(button => {
         button.addEventListener('click', function () {
             const currentFieldset = button.closest('fieldset');
@@ -161,7 +164,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     });
 
-    // --- UPDATED SUBMISSION LOGIC ---
     academicForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const lastSection = document.getElementById(`section${currentSection}`);
@@ -170,9 +172,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const formData = new FormData(this);
         const academicData = {};
         
-        // Map all form entries to the academicData object
         formData.forEach((value, key) => { 
-            // Only convert numeric fields
             if (['usn', 'name', 'department', 'remarks'].includes(key)) {
                 academicData[key] = value;
             } else {
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         academicData.user_id = userId;
 
         try {
-            const response = await fetch('http://localhost:3000/api/academic-info', {
+            const response = await fetch(`${API_BASE_URL}/api/academic-info`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(academicData),

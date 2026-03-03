@@ -17,10 +17,10 @@
       <fieldset class="active">
         <legend>Basic Details</legend>
         <div class="grid-2">
-          <label>Full Name: <input type="text" name="full_name" required /></label>
-          <label>Date of Birth: <input type="date" name="dob" required /></label>
+          <label>Full Name: <input type="text" name="full_name" id="fullName" required /></label>
+          <label>Date of Birth: <input type="date" name="dob" id="dob" required /></label>
           <label>Gender:
-            <select name="gender" required>
+            <select name="gender" id="gender" required>
               <option value="">Select</option>
               <option>Male</option>
               <option>Female</option>
@@ -28,7 +28,7 @@
             </select>
           </label>
           <label>Blood Group:
-            <select name="blood_group" required>
+            <select name="blood_group" id="bloodGroup" required>
               <option value="">Select</option>
               <option>A+</option><option>A-</option>
               <option>B+</option><option>B-</option>
@@ -48,7 +48,7 @@
         <div class="grid-2">
           <label>Email: <input type="email" name="email" required /></label>
           <label>Phone: <input type="tel" name="phone" pattern="[0-9]{10}" required /></label>
-          <label>Alternate Phone: <input type="tel" name="alt_phone" pattern="[0-9]{10}" /></label>
+          <label>Alternate Phone: <input type="tel" name="alt_phone" id="altPhone" pattern="[0-9]{10}" /></label>
         </div>
         <label>Address: <textarea name="address" rows="3" required></textarea></label>
         <div class="grid-3">
@@ -66,12 +66,12 @@
       <fieldset>
         <legend>Parents' Details</legend>
         <div class="grid-2">
-          <label>Father's Name: <input type="text" name="father_name" required /></label>
-          <label>Father's Mobile: <input type="tel" name="father_phone" pattern="[0-9]{10}" required /></label>
-          <label>Father's Alternate Mobile: <input type="tel" name="father_alt_Phone" pattern="[0-9]{10}" /></label>
-          <label>Mother's Name: <input type="text" name="mother_name" required /></label>
-          <label>Mother's Mobile: <input type="tel" name="mother_phone" pattern="[0-9]{10}" required /></label>
-          <label>Mother's Alternate Mobile: <input type="tel" name="mother_alt_phone" pattern="[0-9]{10}" /></label>
+          <label>Father's Name: <input type="text" name="father_name" id="fatherName" required /></label>
+          <label>Father's Mobile: <input type="tel" name="father_phone" id="fatherPhone" pattern="[0-9]{10}" required /></label>
+          <label>Father's Alternate Mobile: <input type="tel" name="father_alt_phone" id="fatherAltPhone" pattern="[0-9]{10}" /></label>
+          <label>Mother's Name: <input type="text" name="mother_name" id="motherName" required /></label>
+          <label>Mother's Mobile: <input type="tel" name="mother_phone" id="motherPhone" pattern="[0-9]{10}" required /></label>
+          <label>Mother's Alternate Mobile: <input type="tel" name="mother_alt_phone" id="motherAltPhone" pattern="[0-9]{10}" /></label>
         </div>
         <div class="button-group">
           <button type="button" class="back-btn">Back</button>
@@ -96,9 +96,9 @@
       <fieldset>
         <legend>Guardian / Emergency Contact</legend>
         <div class="grid-2">
-          <label>Guardian Name: <input type="text" name="guardian_name" required /></label>
-          <label>Relation: <input type="text" name="relation" required /></label>
-          <label>Guardian Phone: <input type="tel" name="guardian_phone" pattern="[0-9]{10}" required /></label>
+          <label>Guardian Name: <input type="text" name="guardian_name" id="guardianName" required /></label>
+          <label>Relation: <input type="text" name="relation" id="relation" required /></label>
+          <label>Guardian Phone: <input type="tel" name="guardian_phone" id="guardianPhone" pattern="[0-9]{10}" required /></label>
         </div>
         <div class="button-group">
           <button type="button" class="back-btn">Back</button>

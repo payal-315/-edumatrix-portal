@@ -1,4 +1,9 @@
 window.onload = async function () {
+    // --- API Configuration ---
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000' 
+        : 'https://edumatrix-bu32.onrender.com';
+
     // --- 0. Real-Time Date Feature ---
     const today = new Date();
     
@@ -32,20 +37,46 @@ window.onload = async function () {
         profileDisplay.textContent = username || 'Student';
     }
 
-    // Load saved emoji from localStorage
-    const savedEmoji = localStorage.getItem(`edumatrix_emoji_${userId}`);
-    if (savedEmoji) {
-        document.getElementById('profileEmoji').textContent = savedEmoji;
-    }
-
-    // Update referral links with user ID
-    const referralLink = `https://edumatrix.com/ref/${userId}`;
+    // Update referral links - use Netlify URL
+    const referralLink = `https://edumatrix-portal.netlify.app/`;
     const referralInputs = document.querySelectorAll('#referralLink, #modalReferralLink');
     referralInputs.forEach(input => {
         if (input) input.value = referralLink;
     });
 
-    // --- 2. Semester Persistence (localStorage) ---
+    // --- 2. Dark/Light Theme Toggle ---
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const body = document.body;
+    
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem(`edumatrix_theme_${userId}`) || 'light';
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
+    } else {
+        body.classList.add('light-theme');
+        body.classList.remove('dark-theme');
+    }
+    
+    // Update theme toggle button icon
+    function updateThemeIcon() {
+        const isDark = body.classList.contains('dark-theme');
+        if (themeToggleBtn) {
+            themeToggleBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        }
+    }
+    updateThemeIcon();
+    
+    // Theme toggle click handler
+    themeToggleBtn?.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        body.classList.toggle('light-theme');
+        const isDark = body.classList.contains('dark-theme');
+        localStorage.setItem(`edumatrix_theme_${userId}`, isDark ? 'dark' : 'light');
+        updateThemeIcon();
+    });
+
+    // --- 3. Semester Persistence (localStorage) ---
     const semSelect = document.getElementById('semSelect');
     const displaySem = document.getElementById('displaySemester');
     
@@ -59,14 +90,16 @@ window.onload = async function () {
         if (displaySem) displaySem.textContent = defaultSem;
         // Update progress bar
         updateSemesterProgress(defaultSem);
+        // Load data for the semester
+        loadAcademicStats(defaultSem);
     }
 
-    // --- 3. Data Fetching Functions ---
+    // --- 4. Data Fetching Functions ---
 
     // Fetch Academic Stats based on Semester
     async function loadAcademicStats(semester) {
         try {
-            const academicRes = await fetch(`http://localhost:3000/api/academic-info/${userId}`);
+            const academicRes = await fetch(`${API_BASE_URL}/api/academic-info/${userId}`);
             const academicData = await academicRes.json();
             const academicInfoDiv = document.getElementById("academicInfo");
 
@@ -93,6 +126,31 @@ window.onload = async function () {
         }
     }
 
+    async function loadPersonalInfo() {
+        try {
+            const personalRes = await fetch(`${API_BASE_URL}/api/personal-info/${userId}`);
+            const personalData = await personalRes.json();
+            const personalInfoDiv = document.getElementById("personalInfo");
+
+            if (personalRes.ok && personalData.personalInfo) {
+                const p = personalData.personalInfo;
+                personalInfoDiv.innerHTML = `
+                    <div class="space-y-1">
+                        <p><strong>Email:</strong> ${p.email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${p.phone || 'N/A'}</p>
+                        <p><strong>Blood:</strong> ${p.blood_group || 'N/A'}</p>
+                    </div>
+                `;
+                const personalBar = document.getElementById('personalProgressBar');
+                if (personalBar) personalBar.style.width = "100%";
+            } else {
+                personalInfoDiv.innerHTML = "<p class='text-gray-400 italic'>Details missing.</p>";
+            }
+        } catch (error) {
+            console.error('❌ Personal Fetch Error:', error);
+        }
+    }
+
     // Function to update semester progress bar
     function updateSemesterProgress(semester) {
         const progressPercent = (semester / 8) * 100;
@@ -108,7 +166,7 @@ window.onload = async function () {
         if (displaySem) displaySem.textContent = semester;
     }
 
-    // --- 4. Event Listeners ---
+    // --- 5. Event Listeners ---
     
     // Semester Change Listener (with localStorage persistence)
     semSelect?.addEventListener('change', (e) => {
@@ -130,7 +188,7 @@ window.onload = async function () {
         window.location.href = 'index.html';
     });
 
-    // --- 5. Calendar Logic ---
+    // --- 6. Calendar Logic ---
     const calendarMonthYear = document.getElementById('calendarMonthYear');
     const calendarDates = document.getElementById('calendarDates');
     let currentMonth = today.getMonth();
@@ -168,7 +226,7 @@ window.onload = async function () {
     document.getElementById('prevMonthBtn')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
     document.getElementById('nextMonthBtn')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-    // --- 6. Share and Refer a Friend Functionality ---
+    // --- 7. Share and Refer a Friend Functionality ---
     
     // Copy link functions
     function copyToClipboard(text, button) {
@@ -202,7 +260,13 @@ window.onload = async function () {
     // Share modal functions
     const shareModal = document.getElementById('shareModal');
     
-    document.getElementById('shareBtn')?.addEventListener('click', () => {
+document.getElementById('shareBtn')?.addEventListener('click', () => {
+        shareModal.classList.remove('hidden');
+        shareModal.classList.add('flex');
+    });
+
+    // Mobile share button
+    document.getElementById('mobileShareBtn')?.addEventListener('click', () => {
         shareModal.classList.remove('hidden');
         shareModal.classList.add('flex');
     });
@@ -254,11 +318,205 @@ window.onload = async function () {
     document.getElementById('modalShareTwitter')?.addEventListener('click', () => shareOnSocial('twitter'));
     document.getElementById('modalShareLinkedIn')?.addEventListener('click', () => shareOnSocial('linkedin'));
 
-    // --- 7. Emoji Picker Functionality ---
-    const emojiModal = document.getElementById('emojiModal');
-    const profileEmojiBtn = document.getElementById('profileEmojiBtn');
+    // --- 8. Set Goals Functionality ---
+    const goalsModal = document.getElementById('goalsModal');
+    const goalsForm = document.getElementById('goalsForm');
+    const goalsDisplay = document.getElementById('goalsDisplay');
+    const goalsList = document.getElementById('goalsList');
+    let isEditMode = false;
     
-    profileEmojiBtn?.addEventListener('click', () => {
+    // Add click event to Set Goals button using ID
+    document.getElementById('setGoalsBtn')?.addEventListener('click', () => {
+        isEditMode = false;
+        loadGoalsForModal();
+        goalsModal.classList.remove('hidden');
+        goalsModal.classList.add('flex');
+    });
+
+    // View Goals button - opens modal to view/edit
+    document.getElementById('viewGoalsBtn')?.addEventListener('click', () => {
+        loadGoalsForModal();
+        goalsModal.classList.remove('hidden');
+        goalsModal.classList.add('flex');
+    });
+
+    document.getElementById('closeGoalsModal')?.addEventListener('click', () => {
+        goalsModal.classList.add('hidden');
+        goalsModal.classList.remove('flex');
+    });
+
+    goalsModal?.addEventListener('click', (e) => {
+        if (e.target === goalsModal) {
+            goalsModal.classList.add('hidden');
+            goalsModal.classList.remove('flex');
+        }
+    });
+
+    // Load goals from localStorage/API and populate form
+    function loadGoalsForModal() {
+        // First try to load from localStorage
+        const savedGoals = localStorage.getItem(`edumatrix_goals_${userId}`);
+        let goals = savedGoals ? JSON.parse(savedGoals) : null;
+        
+        // Also try to fetch from API
+        fetch(`${API_BASE_URL}/api/goals/${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.goals) {
+                    goals = data.goals;
+                    localStorage.setItem(`edumatrix_goals_${userId}`, JSON.stringify(goals));
+                }
+                
+                if (goals) {
+                    // Fill form with saved goals
+                    if (goals.goal_sgpa) document.getElementById('goalSgpa').value = goals.goal_sgpa;
+                    if (goals.goal_attendance) document.getElementById('goalAttendance').value = goals.goal_attendance;
+                    if (goals.goal_study_hours) document.getElementById('goalStudyHours').value = goals.goal_study_hours;
+                    if (goals.goal_books) document.getElementById('goalBooks').value = goals.goal_books;
+                    if (goals.goal_hackathons) document.getElementById('goalHackathons').value = goals.goal_hackathons;
+                    if (goals.goal_certificates) document.getElementById('goalCertificates').value = goals.goal_certificates;
+                    if (goals.goal_note) document.getElementById('goalNote').value = goals.goal_note;
+                    
+                    // Display saved goals
+                    displayGoals(goals);
+                    
+                    // Also update the Goals card on dashboard
+                    updateGoalsCard(goals);
+                }
+            })
+            .catch(err => {
+                console.log('Using local goals:', err);
+                if (goals) {
+                    if (goals.goalSgpa) document.getElementById('goalSgpa').value = goals.goalSgpa;
+                    if (goals.goalAttendance) document.getElementById('goalAttendance').value = goals.goalAttendance;
+                    if (goals.goalStudyHours) document.getElementById('goalStudyHours').value = goals.goalStudyHours;
+                    if (goals.goalBooks) document.getElementById('goalBooks').value = goals.goalBooks;
+                    if (goals.goalHackathons) document.getElementById('goalHackathons').value = goals.goalHackathons;
+                    if (goals.goalCertificates) document.getElementById('goalCertificates').value = goals.goalCertificates;
+                    if (goals.goalNote) document.getElementById('goalNote').value = goals.goalNote;
+                    displayGoals(goals);
+                    updateGoalsCard(goals);
+                }
+            })
+    }
+
+    // Update Goals card on the dashboard
+    function updateGoalsCard(goals) {
+        const goalsInfoSummary = document.getElementById('goalsInfoSummary');
+        const goalsProgressBar = document.getElementById('goalsProgressBar');
+        const goalsProgressText = document.getElementById('goalsProgressText');
+        
+        if (goals) {
+            // Count how many goals are set
+            let goalsSet = 0;
+            let totalGoals = 6;
+            if (goals.goal_sgpa || goals.goalSgpa) goalsSet++;
+            if (goals.goal_attendance || goals.goalAttendance) goalsSet++;
+            if (goals.goal_study_hours || goals.goalStudyHours) goalsSet++;
+            if (goals.goal_books || goals.goalBooks) goalsSet++;
+            if (goals.goal_hackathons || goals.goalHackathons) goalsSet++;
+            if (goals.goal_certificates || goals.goalCertificates) goalsSet++;
+            
+            const progressPercent = (goalsSet / totalGoals) * 100;
+            
+            if (goalsInfoSummary) {
+                goalsInfoSummary.innerHTML = `
+                    <div class="text-left text-xs">
+                        <p>🎯 SGPA: ${goals.goal_sgpa || goals.goalSgpa || 'N/A'}</p>
+                        <p>📊 Attendance: ${goals.goal_attendance || goals.goalAttendance || 'N/A'}%</p>
+                        <p>📚 Study: ${goals.goal_study_hours || goals.goalStudyHours || 'N/A'}hrs</p>
+                    </div>
+                `;
+            }
+            
+            if (goalsProgressBar) {
+                goalsProgressBar.style.width = progressPercent + '%';
+            }
+            
+            if (goalsProgressText) {
+                goalsProgressText.textContent = Math.round(progressPercent) + '%';
+            }
+        }
+    }
+
+    // Display goals in the modal
+    function displayGoals(goals) {
+        let html = '';
+        const g = goals || {};
+        if (g.goal_sgpa || g.goalSgpa) html += `<p>🎯 SGPA Target: <strong>${g.goal_sgpa || g.goalSgpa}</strong></p>`;
+        if (g.goal_attendance || g.goalAttendance) html += `<p>📊 Attendance Target: <strong>${g.goal_attendance || g.goalAttendance}%</strong></p>`;
+        if (g.goal_study_hours || g.goalStudyHours) html += `<p>📚 Weekly Study Hours: <strong>${g.goal_study_hours || g.goalStudyHours} hrs</strong></p>`;
+        if (g.goal_books || g.goalBooks) html += `<p>📖 Books to Read: <strong>${g.goal_books || g.goalBooks}</strong></p>`;
+        if (g.goal_hackathons || g.goalHackathons) html += `<p>💻 Hackathons: <strong>${g.goal_hackathons || g.goalHackathons}</strong></p>`;
+        if (g.goal_certificates || g.goalCertificates) html += `<p>🏅 Certificates: <strong>${g.goal_certificates || g.goalCertificates}</strong></p>`;
+        if (g.goal_note || g.goalNote) html += `<p>📝 Note: ${g.goal_note || g.goalNote}</p>`;
+        
+        if (html) {
+            goalsList.innerHTML = html;
+            goalsDisplay.classList.remove('hidden');
+        } else {
+            goalsDisplay.classList.add('hidden');
+        }
+    }
+
+    // Save goals to database via API
+    goalsForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const goals = {
+            goal_sgpa: document.getElementById('goalSgpa').value,
+            goal_attendance: document.getElementById('goalAttendance').value,
+            goal_study_hours: document.getElementById('goalStudyHours').value,
+            goal_books: document.getElementById('goalBooks').value,
+            goal_hackathons: document.getElementById('goalHackathons').value,
+            goal_certificates: document.getElementById('goalCertificates').value,
+            goal_note: document.getElementById('goalNote').value
+        };
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/goals/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(goals)
+            });
+            
+            if (response.ok) {
+                localStorage.setItem(`edumatrix_goals_${userId}`, JSON.stringify(goals));
+                alert('Goals saved successfully!');
+                displayGoals(goals);
+                updateGoalsCard(goals);
+                goalsModal.classList.add('hidden');
+                goalsModal.classList.remove('flex');
+            } else {
+                alert('Failed to save goals. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error saving goals:', error);
+            localStorage.setItem(`edumatrix_goals_${userId}`, JSON.stringify(goals));
+            alert('Goals saved locally (offline mode)!');
+            displayGoals(goals);
+            updateGoalsCard(goals);
+            goalsModal.classList.add('hidden');
+            goalsModal.classList.remove('flex');
+        }
+    });
+
+    // --- 9. Emoji Picker Functionality ---
+    const emojiModal = document.getElementById('emojiModal');
+    
+    document.getElementById('profileEmojiBtn')?.addEventListener('click', () => {
+        emojiModal.classList.remove('hidden');
+        emojiModal.classList.add('flex');
+    });
+
+    // Mobile emoji button - opens emoji picker from hamburger menu
+    document.getElementById('mobileEmojiBtn')?.addEventListener('click', () => {
+        emojiModal.classList.remove('hidden');
+        emojiModal.classList.add('flex');
+    });
+
+    // Mobile emoji button in profile section
+    document.getElementById('profileEmojiBtnMobile')?.addEventListener('click', () => {
         emojiModal.classList.remove('hidden');
         emojiModal.classList.add('flex');
     });
@@ -278,93 +536,27 @@ window.onload = async function () {
     // Handle emoji selection
     document.querySelectorAll('.emoji-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const emoji = btn.getAttribute('data-emoji');
-            document.getElementById('profileEmoji').textContent = emoji;
-            // Save emoji to localStorage
-            localStorage.setItem(`edumatrix_emoji_${userId}`, emoji);
+            const selectedEmoji = btn.dataset.emoji;
+            // Update desktop emoji
+            document.getElementById('profileEmoji').textContent = selectedEmoji;
+            // Update mobile emoji
+            const mobileEmoji = document.getElementById('profileEmojiMobile');
+            if (mobileEmoji) mobileEmoji.textContent = selectedEmoji;
+            localStorage.setItem(`edumatrix_emoji_${userId}`, selectedEmoji);
             emojiModal.classList.add('hidden');
             emojiModal.classList.remove('flex');
         });
     });
 
-    // --- 8. Set Goals Functionality ---
-    const goalsModal = document.getElementById('goalsModal');
-    const setGoalsBtn = document.getElementById('setGoalsBtn');
-    
-    setGoalsBtn?.addEventListener('click', () => {
-        loadGoals(); // Load existing goals before showing modal
-        goalsModal.classList.remove('hidden');
-        goalsModal.classList.add('flex');
-    });
-
-    document.getElementById('closeGoalsModal')?.addEventListener('click', () => {
-        goalsModal.classList.add('hidden');
-        goalsModal.classList.remove('flex');
-    });
-
-    goalsModal?.addEventListener('click', (e) => {
-        if (e.target === goalsModal) {
-            goalsModal.classList.add('hidden');
-            goalsModal.classList.remove('flex');
-        }
-    });
-
-    // Handle goals form submission
-    document.getElementById('goalsForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const goals = {
-            sgpa: document.getElementById('goalSgpa').value,
-            attendance: document.getElementById('goalAttendance').value,
-            studyHours: document.getElementById('goalStudyHours').value,
-            books: document.getElementById('goalBooks').value,
-            hackathons: document.getElementById('goalHackathons').value,
-            certificates: document.getElementById('goalCertificates').value,
-            note: document.getElementById('goalNote').value
-        };
-        
-        // Save goals to localStorage
-        localStorage.setItem(`edumatrix_goals_${userId}`, JSON.stringify(goals));
-        
-        alert('Goals saved successfully!');
-        displayGoals(goals);
-    });
-
-    function loadGoals() {
-        const savedGoals = localStorage.getItem(`edumatrix_goals_${userId}`);
-        if (savedGoals) {
-            const goals = JSON.parse(savedGoals);
-            document.getElementById('goalSgpa').value = goals.sgpa || '';
-            document.getElementById('goalAttendance').value = goals.attendance || '';
-            document.getElementById('goalStudyHours').value = goals.studyHours || '';
-            document.getElementById('goalBooks').value = goals.books || '';
-            document.getElementById('goalHackathons').value = goals.hackathons || '';
-            document.getElementById('goalCertificates').value = goals.certificates || '';
-            document.getElementById('goalNote').value = goals.note || '';
-            displayGoals(goals);
-        }
+    // Load saved emoji - both desktop and mobile
+    const savedEmoji = localStorage.getItem(`edumatrix_emoji_${userId}`);
+    if (savedEmoji) {
+        document.getElementById('profileEmoji').textContent = savedEmoji;
+        const mobileEmoji = document.getElementById('profileEmojiMobile');
+        if (mobileEmoji) mobileEmoji.textContent = savedEmoji;
     }
 
-    function displayGoals(goals) {
-        const goalsDisplay = document.getElementById('goalsDisplay');
-        const goalsList = document.getElementById('goalsList');
-        
-        let html = '';
-        if (goals.sgpa) html += `<p>🎯 SGPA Target: ${goals.sgpa}</p>`;
-        if (goals.attendance) html += `<p>📊 Attendance: ${goals.attendance}%</p>`;
-        if (goals.studyHours) html += `<p>⏰ Study Hours: ${goals.studyHours}/week</p>`;
-        if (goals.books) html += `<p>📚 Books: ${goals.books}</p>`;
-        if (goals.hackathons) html += `<p>💻 Hackathons: ${goals.hackathons}</p>`;
-        if (goals.certificates) html += `<p>🏆 Certificates: ${goals.certificates}</p>`;
-        if (goals.note) html += `<p>📝 Note: ${goals.note}</p>`;
-        
-        if (html) {
-            goalsList.innerHTML = html;
-            goalsDisplay.classList.remove('hidden');
-        }
-    }
-
-    // --- 9. Initial Execution ---
+    // --- 10. Initial Execution ---
     renderCalendar();
-    loadAcademicStats(defaultSem);
+    loadPersonalInfo();
 };

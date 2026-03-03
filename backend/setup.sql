@@ -116,5 +116,21 @@ CREATE TABLE IF NOT EXISTS certificates (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Goals table
+CREATE TABLE IF NOT EXISTS goals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    goal_sgpa DECIMAL(4,2),
+    goal_attendance DECIMAL(5,2),
+    goal_study_hours INT,
+    goal_books INT,
+    goal_hackathons INT,
+    goal_certificates INT,
+    goal_note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id)
+);
+
 -- Display success message
 SELECT 'Database tables created successfully!' AS status;

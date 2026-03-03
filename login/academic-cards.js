@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', async function() {
+    // --- API Configuration ---
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000'
+        : 'https://edumatrix-bu32.onrender.com';
+
     const container = document.getElementById('cardContainer');
     const loadingMessage = document.getElementById('loadingMessage');
     const noRecordsMessage = document.getElementById('noRecordsMessage');
 
-    // 1. VTU Subject Mapping (Must match your academic.js)
     const VTU_SUBJECTS = {
         "1": ["Mathematics-I", "Applied Physics", "Programming in C", "Engineering Science", "English", "Physics Lab", "C Programming Lab", "Environmental Studies"],
         "2": ["Mathematics-II", "Applied Chemistry", "Computer Aided Drawing", "Basic Electronics", "Basic Electrical", "Chemistry Lab", "Electrical Lab", "Constitution of India"],
@@ -28,13 +32,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         container.innerHTML = ''; 
 
         try {
-            const response = await fetch(`http://localhost:3000/api/academic-info/${userId}`);
+            const response = await fetch(`${API_BASE_URL}/api/academic-info/${userId}`);
             const result = await response.json();
 
             loadingMessage.style.display = 'none';
 
             if (response.ok && result.academicInfo && result.academicInfo.length > 0) {
-                // Sort records by semester ascending
                 result.academicInfo.sort((a, b) => a.semester - b.semester);
 
                 result.academicInfo.forEach(record => {
@@ -43,7 +46,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                     card.setAttribute('data-record-id', record.id);
                     card.setAttribute('data-semester', record.semester);
 
-                    // Attendance Calculation
                     let attendancePercentage = 'N/A';
                     if (record.total_classes > 0) {
                         attendancePercentage = ((record.attended_classes / record.total_classes) * 100).toFixed(2) + '%';
@@ -51,17 +53,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                         attendancePercentage = parseFloat(record.attendance).toFixed(2) + '%';
                     }
 
-                    // Generate Dynamic Marks HTML based on VTU_SUBJECTS
                     const subjects = VTU_SUBJECTS[record.semester] || [];
                     let dynamicMarksHTML = '';
                     
                     subjects.forEach((subjectName, index) => {
-                        // Updated mapping to look for generic 'sub1', 'sub2' etc from DB
                         const markVal = record[`sub${index + 1}`] ?? 'N/A';
                         dynamicMarksHTML += `<div><strong>${subjectName}:</strong> ${markVal}</div>`;
                     });
 
-                    // IMPORTANT: Everything inside innerHTML uses BACKTICKS ( ` )
                     card.innerHTML = `
                         <h2>${record.name || 'N/A'} (Sem ${record.semester})</h2>
                         <p><strong>USN:</strong> ${record.usn || 'N/A'} | <strong>Dept:</strong> ${record.department || 'N/A'}</p>
@@ -86,7 +85,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
                     container.appendChild(card);
 
-                    // Menu Click Event
                     const menu = card.querySelector('.menu');
                     menu.addEventListener('click', function(event) {
                         event.stopPropagation();
@@ -119,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         modal.querySelector("#confirm-delete").addEventListener("click", async function () {
             try {
-                const response = await fetch(`http://localhost:3000/api/academic-info/${recordId}`, { method: 'DELETE' });
+                const response = await fetch(`${API_BASE_URL}/api/academic-info/${recordId}`, { method: 'DELETE' });
                 if (response.ok) {
                     alert('Record deleted successfully!');
                     modal.remove();
