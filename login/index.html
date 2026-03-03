@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Roboto Mono", monospace;
+      background: url('https://thumbs.dreamstime.com/z/cute-frame-background-school-student-theme-frame-border-student-theme-design-doodle-style-icon-128297233.jpg') no-repeat center center fixed;
+      background-size: cover;
+      transition: background 1s ease, color 1s ease;
+      color: #000000;
+      overflow-x: hidden;
+    }
+
+    .sticker {
+      position: absolute;
+      animation: stickerAnimation 15s infinite;
+      width: 80px;
+    }
+
+    .sticker1 { top: 5%; left: 15%; animation-delay: 0s; }
+    .sticker2 { top: 20%; left: 60%; animation-delay: 2s; }
+    .sticker3 { top: 35%; left: 25%; animation-delay: 4s; }
+    .sticker4 { top: 50%; left: 70%; animation-delay: 6s; }
+    .sticker5 { top: 70%; left: 10%; animation-delay: 8s; }
+
+    @keyframes stickerAnimation {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(150px, -150px); }
+      50% { transform: translate(0, -300px); }
+      75% { transform: translate(-150px, -150px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #6eff2b99;
+    }
+
+    .glow-button {
+      background-color: black;
+      transition: all 0.3s ease;
+    }
+
+    .glow-button:hover {
+      background-color: #021310e3;
+      box-shadow: 0 0 10px #000c11e5, 0 0 40px #00080ce1, 0 0 80px #03949e;
+    }
+
+    .logged-in {
+      background: linear-gradient(135deg, #29b6f6, #00bcd4);
+      color: white;
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-center items-center min-h-screen px-4">
+
+  <!-- STUDY STICKERS -->
+  <img src="https://img.icons8.com/ios/452/book.png" alt="book" class="sticker sticker1" />
+  <img src="https://img.icons8.com/ios/452/brain.png" alt="brain" class="sticker sticker2" />
+  <img src="https://img.icons8.com/ios/452/pen.png" alt="pen" class="sticker sticker3" />
+  <img src="https://img.icons8.com/ios/452/apple.png" alt="apple" class="sticker sticker4" />
+  <img src="https://img.icons8.com/ios/452/pencil.png" alt="pencil" class="sticker sticker5" />
+
+  <!-- LOGIN FORM -->
+  <div id="loginSection" class="w-full max-w-md p-8 rounded-lg text-gray-800 fade-in form-card">
+    <h2 class="text-3xl mb-6 text-center text-black">Student Login</h2>
+    <form id="loginForm">
+      <input name="email" class="w-full mb-4 px-4 py-2 bg-white/20 text-black rounded" type="email" placeholder="Email" required>
+      <input name="password" class="w-full mb-4 px-4 py-2 bg-white/20 text-black rounded" type="password" placeholder="Password" required>
+      <label class="flex justify-between items-center mb-4 text-sm text-black">
+        <span><input type="checkbox" class="mr-2"> Remember me</span>
+        <button type="button" onclick="showSignup()" class="underline text-black hover:text-yellow-300">Sign Up</button>
+      </label>
+      <button type="submit" class="w-full py-2 rounded glow-button text-white font-bold tracking-widest">LOGIN</button>
+    </form>
+  </div>
+
+  <!-- SIGNUP FORM -->
+  <div id="signupSection" class="w-full max-w-md p-8 rounded-lg text-gray-800 hidden fade-in form-card">
+    <h2 class="text-3xl mb-6 text-center">Create Account</h2>
+    <form id="signupForm" class="flex flex-col gap-4">
+      <label>Full Name: <input type="text" name="name" required class="w-full p-2 rounded bg-white/90"></label>
+      <label>Email: <input type="email" name="email" required class="w-full p-2 rounded bg-white/90"></label>
+      <label>Phone: <input type="tel" name="phone" pattern="[0-9]{10}" required class="w-full p-2 rounded bg-white/90"></label>
+      <label>Password: <input type="password" name="password" required class="w-full p-2 rounded bg-white/90"></label>
+      <label>Confirm Password: <input type="password" name="confirm_password" required class="w-full p-2 rounded bg-white/90"></label>
+      <button type="submit" class="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 rounded">Sign Up</button>
+    </form>
+    <p class="mt-4 text-sm text-center">Already have an account?
+      <button onclick="showLogin()" class="underline text-black">Log in here</button>
+    </p>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const loginSection = document.getElementById("loginSection");
+    const signupSection = document.getElementById("signupSection");
+
+    function showSignup() {
+      loginSection.classList.add("fade-out");
+      setTimeout(() => {
+        loginSection.classList.add("hidden");
+        loginSection.classList.remove("fade-out");
+        signupSection.classList.remove("hidden");
+        signupSection.classList.add("fade-in");
+      }, 500);
+    }
+
+    function showLogin() {
+      signupSection.classList.add("fade-out");
+      setTimeout(() => {
+        signupSection.classList.add("hidden");
+        signupSection.classList.remove("fade-out");
+        loginSection.classList.remove("hidden");
+        loginSection.classList.add("fade-in");
+      }, 500);
+    }
+
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const phone = form.phone.value.trim();
+      const password = form.password.value.trim();
+      const confirmPassword = form.confirm_password.value.trim();
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, phone, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message || "Signup successful! Please login.");
+          showLogin();
+        } else {
+          alert(data.message || "Signup failed.");
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        alert("Server error. Please try again later.");
+      }
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const email = form.email.value.trim();
+      const password = form.password.value.trim();
+
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message || "Login successful!");
+          sessionStorage.setItem('user_id', data.user.id);
+          sessionStorage.setItem('username', data.user.username);
+          document.body.classList.add("logged-in");
+          window.location.href = "dashboard.html";
+        } else {
+          alert(data.message || "Login failed.");
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('Server error. Please try again later.');
+      }
+    });
+  </script>
+</body>
+</html>

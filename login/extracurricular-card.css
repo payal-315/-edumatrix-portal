@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* BODY background & animation */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    display: flex; /* Use flexbox to center content vertically */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: url('https://png.pngtree.com/thumb_back/fh260/back_our/20190617/ourmid/pngtree-taobao-vector-cartoon-neat-study-desk-table-home-illustration-table-lamp-image_130341.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Floating animated background shapes (from your previous working code) */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    animation: floatUp 20s infinite ease-in-out;
+    filter: blur(10px);
+    bottom: -200px;
+}
+
+.circle1 {
+    width: 120px;
+    height: 120px;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.circle2 {
+    width: 80px;
+    height: 80px;
+    left: 45%;
+    animation-delay: 5s;
+}
+
+.circle3 {
+    width: 150px;
+    height: 150px;
+    left: 75%;
+    animation-delay: 10s;
+}
+
+@keyframes floatUp {
+    0% {
+        bottom: -200px;
+        transform: translateX(0) scale(1);
+    }
+    50% {
+        transform: translateX(50px) scale(1.1);
+    }
+    100% {
+        bottom: 100%;
+        transform: translateX(-20px) scale(1);
+    }
+}
+
+
+/* Container (Form Background) */
+.container {
+    background: 
+        rgba(255, 255, 255, 0.7)
+        url('https://t3.ftcdn.net/jpg/02/78/52/28/240_F_278522829_XtMhHvtEKYYFhrEmRzhl1SDhtUT5eRM2.jpg') repeat;
+    background-blend-mode: lighten;
+    background-size: 300px 300px;
+    animation: moveBackground 40s linear infinite;
+
+    max-width: 1000px; /* Increased max-width for better card layout */
+    width: 100%;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 1;
+    color: #4e148c;
+    font-family: 'Inter', sans-serif;
+    text-align: center; /* Center main heading and button */
+}
+
+/* Animated background movement for container */
+@keyframes moveBackground {
+    0% {
+        background-position: 0 0;
+    }
+    50% {
+        background-position: 400px 200px;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #4e148c;
+    font-size: 2.5em; /* Larger heading */
+    font-weight: 700;
+}
+
+/* Grid for cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 30px; /* Space between cards */
+    padding: 20px 0;
+    justify-content: center;
+    align-items: stretch; /* Make cards stretch to same height */
+}
+
+/* Individual Card Styles */
+.extracurricular-card { /* Renamed from .card to avoid conflict and be specific */
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Light gradient background */
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    text-align: left;
+    color: #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Ensure cards fill their grid cell height */
+    position: relative;
+    overflow: hidden;
+}
+
+.extracurricular-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.extracurricular-card h3 { /* Changed from h2 to h3 as per JS for card titles */
+    color: #4e148c;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.extracurricular-card p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.extracurricular-card p strong {
+    color: #222;
+}
+
+.extracurricular-card ul {
+    list-style-type: none; /* Remove default bullets */
+    padding-left: 0; /* Remove default padding */
+    margin: 10px 0;
+}
+
+.extracurricular-card ul li {
+    margin-bottom: 8px;
+    background-color: #e0e0e0; /* Light background for list items */
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    position: relative;
+    padding-left: 30px; /* Space for custom bullet */
+}
+
+.extracurricular-card ul li::before {
+    content: '\2022'; /* Custom bullet point */
+    color: #4e148c; /* Color for the bullet */
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1.5em; /* Negative margin to pull it into padding */
+    position: absolute;
+    left: 15px;
+    top: 10px;
+}
+
+
+.extracurricular-card .card-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #e0e0e0;
+}
+
+.extracurricular-card .card-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.extracurricular-card .no-details {
+    font-style: italic;
+    color: #888;
+    font-size: 0.85em;
+}
+
+/* Go Back Button */
+#goBackBtn {
+    display: block;
+    margin: 30px auto 0;
+    padding: 12px 24px;
+    background-color: #4e148c;
+    color: #fff;
+    border: none;
+    border-radius: 8px; /* Slightly larger radius */
+    cursor: pointer;
+    font-size: 17px; /* Slightly larger font */
+    font-weight: 600; /* Bolder text */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#goBackBtn:hover {
+    background-color: #36076f;
+    transform: translateY(-3px);
+}
+
+/* Loading and No Activities Message Styling */
+.loading-message, .no-activities-message {
+    grid-column: 1 / -1; /* Span across all columns in the grid */
+    text-align: center;
+    font-size: 1.2em;
+    color: #666;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr; /* Stack cards on small screens */
+    }
+
+    .extracurricular-card {
+        padding: 20px;
+    }
+}

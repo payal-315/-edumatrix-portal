@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* BODY background */
+body {
+  background: url('https://th.bing.com/th/id/OIP.tCbCGYzK6W1RVU3vOwSpKgHaEK?rs=1&pid=ImgDetMain') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container (Form Background) */
+.container {
+  background: rgba(255, 255, 255, 0.7) url('https://th.bing.com/th/id/OIP.KHGfMo1BMngKCuZQtMTHIAAAAA?rs=1&pid=ImgDetMain') repeat;
+  background-blend-mode: lighten;
+  background-size: 300px 300px;
+  animation: moveBackground 40s linear infinite;
+
+  max-width: 900px;
+  width: 100%;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  position: relative;
+}
+
+/* Moving animation for form background */
+@keyframes moveBackground {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400px 200px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #4e148c;
+}
+
+/* Progress Tracker */
+.progress-tracker {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Form Section */
+form fieldset {
+  border: none;
+  margin-bottom: 30px;
+  display: none;
+  animation: fadeIn 0.8s ease;
+}
+
+/* Animation for fieldsets appearing */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+form fieldset.active {
+  display: block;
+}
+
+form legend {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #fdd835;
+  padding-bottom: 5px;
+  color: #444;
+}
+
+label {
+  display: block;
+  margin-bottom: 15px;
+}
+
+/* Inputs */
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fefefe;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #fbc02d;
+  outline: none;
+  background-color: #fff9c4;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+button, .next-btn, .back-btn {
+  padding: 14px 20px;
+  background-color: #fbc02d;
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+button:hover, .next-btn:hover, .back-btn:hover {
+  background-color: #f57f17;
+}
+
+/* Different spacing for next/back */
+.next-btn, .back-btn {
+  width: auto;
+  margin-right: 10px;
+}
+
+/* Grid Layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  button, .next-btn, .back-btn {
+    width: 100%;
+    margin-right: 0;
+    margin-top: 15px;
+  }
+}
+
+/* Submitted Info Display */
+.display-info {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s ease;
+}
+
+.display-info h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #4e148c;
+}
+
+#infoContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+#infoContent div {
+  background: #fdf6e3;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Edit Button */
+#editButton {
+  margin-top: 20px;
+  background-color: #4e148c;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#editButton:hover {
+  background-color: #36076f;
+}

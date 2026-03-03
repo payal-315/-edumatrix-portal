@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Personal Information</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="personal.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Personal Information</h1>
+    <div id="progressTracker" class="progress-tracker">Step 1/5</div>
+
+    <form id="personalForm">
+
+      <!-- Step 1: Basic Details -->
+      <fieldset class="active">
+        <legend>Basic Details</legend>
+        <div class="grid-2">
+          <label>Full Name: <input type="text" name="full_name" required /></label>
+          <label>Date of Birth: <input type="date" name="dob" required /></label>
+          <label>Gender:
+            <select name="gender" required>
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>Blood Group:
+            <select name="blood_group" required>
+              <option value="">Select</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>O+</option><option>O-</option>
+            </select>
+          </label>
+        </div>
+        <div class="button-group">
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </fieldset>
+
+      <!-- Step 2: Contact Information -->
+      <fieldset>
+        <legend>Contact Information</legend>
+        <div class="grid-2">
+          <label>Email: <input type="email" name="email" required /></label>
+          <label>Phone: <input type="tel" name="phone" pattern="[0-9]{10}" required /></label>
+          <label>Alternate Phone: <input type="tel" name="alt_phone" pattern="[0-9]{10}" /></label>
+        </div>
+        <label>Address: <textarea name="address" rows="3" required></textarea></label>
+        <div class="grid-3">
+          <label>City: <input type="text" name="city" required /></label>
+          <label>State: <input type="text" name="state" required /></label>
+          <label>Zip Code: <input type="text" name="zip" required /></label>
+        </div>
+        <div class="button-group">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </fieldset>
+
+      <!-- Step 3: Parents Details -->
+      <fieldset>
+        <legend>Parents' Details</legend>
+        <div class="grid-2">
+          <label>Father's Name: <input type="text" name="father_name" required /></label>
+          <label>Father's Mobile: <input type="tel" name="father_phone" pattern="[0-9]{10}" required /></label>
+          <label>Father's Alternate Mobile: <input type="tel" name="father_alt_Phone" pattern="[0-9]{10}" /></label>
+          <label>Mother's Name: <input type="text" name="mother_name" required /></label>
+          <label>Mother's Mobile: <input type="tel" name="mother_phone" pattern="[0-9]{10}" required /></label>
+          <label>Mother's Alternate Mobile: <input type="tel" name="mother_alt_phone" pattern="[0-9]{10}" /></label>
+        </div>
+        <div class="button-group">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </fieldset>
+
+      <!-- Step 4: Additional Info -->
+      <fieldset>
+        <legend>Additional Info</legend>
+        <div class="grid-2">
+          <label>Nationality: <input type="text" name="nationality" required /></label>
+          <label>Aadhar Number: <input type="text" name="aadhar" maxlength="12" pattern="[0-9]{12}" required /></label>
+        </div>
+        <div class="button-group">
+          <button type="button" class="back-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </fieldset>
+
+      <!-- Step 5: Guardian / Emergency Contact -->
+      <fieldset>
+        <legend>Guardian / Emergency Contact</legend>
+        <div class="grid-2">
+          <label>Guardian Name: <input type="text" name="guardian_name" required /></label>
+          <label>Relation: <input type="text" name="relation" required /></label>
+          <label>Guardian Phone: <input type="tel" name="guardian_phone" pattern="[0-9]{10}" required /></label>
+        </div>
+        <div class="button-group">
+          <button type="button" class="back-btn">Back</button>
+          <button type="submit">Save Personal Info</button>
+        </div>
+      </fieldset>
+
+    </form>
+
+    <div id="displayInfo" class="display-info" style="display: none;">
+      <h2>Submitted Personal Information</h2>
+      <div id="infoContent"></div>
+      <button id="editButton">Edit Information</button>
+    </div>
+  </div>
+
+  <script src="personal.js"></script>
+</body>
+</html>

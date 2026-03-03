@@ -1,0 +1,151 @@
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: url('https://thumbs.dreamstime.com/z/vector-back-to-school-concept-school-supplies-cartoon-back-to-school-concept-school-supplies-cartoon-124645462.jpg') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* Container (Form) with new animated background */
+.container {
+  max-width: 900px;
+  width: 100%;
+  background: url('https://as1.ftcdn.net/v2/jpg/02/17/37/46/1000_F_217374627_9bNjTiaHMH8XzwkAJHRF7ZghtTkPOgZO.jpg') repeat;
+  background-size: 250px 150px;
+  animation: moveBackground 30s linear infinite;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  overflow: hidden; /* Ensures content is contained within the form's bounds */
+}
+
+/* Keyframes for animated container background */
+@keyframes moveBackground {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 200px 100px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Text styles inside the form */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  color: #4e148c;
+  font-weight: 700;
+}
+
+form fieldset {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 25px;
+  background-color: rgba(255, 255, 255, 0.85); /* Light white background for clarity */
+}
+
+/* NEW: Subject Grid Layout for Section 2 */
+#subjectsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns on large screens */
+  gap: 15px;
+}
+
+form legend {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #7b1fa2;
+}
+
+label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  /* Added to prevent long subject names from breaking the line */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-top: 6px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #7b1fa2;
+  outline: none;
+  background-color: #f3e5f5;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  background-color: #7b1fa2;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #4a0072;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  #subjectsContainer {
+    grid-template-columns: 1fr; /* Switch to one column on smaller screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+
+  form fieldset {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  button {
+    font-size: 1rem;
+  }
+  input, textarea {
+    padding: 10px 12px;
+  }
+}

@@ -1,0 +1,384 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   EduMatrix Dashboard
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+ </head>
+ <body class="bg-[#e8f0fe] min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-[1200px] w-full bg-white rounded-3xl flex flex-col md:flex-row overflow-hidden shadow-lg">
+   <aside class="bg-[#0b4dbd] w-full md:w-56 flex flex-col justify-between rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none p-6">
+    <div>
+     <button class="flex items-center gap-2 bg-yellow-400 px-3 py-2 rounded-md shadow-md mb-12">
+      <i class="fas fa-globe text-white text-lg">
+      </i>
+      <span class="text-white font-semibold text-sm">
+       EduMatrix
+      </span>
+     </button>
+     <nav class="flex flex-col gap-7 text-white text-sm font-normal">
+      <a class="flex items-center gap-3 hover:text-yellow-400 transition-colors" href="#">
+       <i class="fas fa-home text-lg">
+       </i>
+       Home
+      </a>
+      <a class="flex items-center gap-3 hover:text-yellow-400 transition-colors" href="academic.html">
+        <i class="fas fa-chart-bar text-lg"></i>
+        My Results
+      </a>      
+      <a class="flex items-center gap-3 hover:text-yellow-400 transition-colors" href="extracurricular.html">
+       <i class="fas fa-file-alt text-lg">
+       </i>
+       Extracurricular
+      </a>
+      <a class="flex items-center gap-3 hover:text-yellow-400 transition-colors" href="personal.html">
+       <i class="fas fa-id-card text-lg">
+       </i>
+       Personal Details
+      </a>
+      <a class="flex items-center gap-3 hover:text-yellow-400 transition-colors" href="#">
+       <i class="fas fa-cog text-lg">
+       </i>
+       Settings
+      </a>
+      <button id="logoutBtn" class="flex items-center gap-3 text-red-300 hover:text-red-500 transition-colors mt-4">
+        <i class="fas fa-sign-out-alt text-lg"></i>
+        Logout
+      </button>
+     </nav>
+    </div>
+    <div class="text-white text-xs font-normal mt-12">
+     <span>
+      Semester
+     </span>
+     <span class="font-semibold" id="displaySemester">
+      1
+     </span>
+     <span>
+      of 8
+     </span>
+     <select id="semSelect" class="bg-[#0b2a5a] text-white border border-blue-400 rounded mt-2 p-1 w-full outline-none cursor-pointer">
+        <option value="1" selected>Semester 1</option>
+        <option value="2">Semester 2</option>
+        <option value="3">Semester 3</option>
+        <option value="4">Semester 4</option>
+        <option value="5">Semester 5</option>
+        <option value="6">Semester 6</option>
+        <option value="7">Semester 7</option>
+        <option value="8">Semester 8</option>
+     </select>
+     <div class="w-full h-2 rounded-full bg-yellow-400 mt-1 relative">
+      <div id="semProgressBarYellow" class="absolute top-0 left-0 h-2 rounded-full bg-yellow-400" style="width: 12.5%">
+      </div>
+      <div id="semProgressBarBlue" class="absolute top-0 left-[12.5%] h-2 rounded-full bg-[#0b2a5a]" style="width: 87.5%">
+      </div>
+     </div>
+    </div>
+   </aside>
+   <main class="flex-1 p-6 md:p-10 flex flex-col gap-8">
+    <div class="max-w-xs">
+     <div class="flex items-center bg-[#f1f5f9] rounded-lg px-4 py-2 text-xs text-[#64748b]">
+      <input class="bg-transparent outline-none w-full" placeholder="What do you want to learn today?" type="text"/>
+      <i class="fas fa-search text-[#94a3b8]">
+      </i>
+     </div>
+    </div>
+    <section class="bg-white rounded-xl shadow-md p-6 flex justify-between items-center max-w-full">
+     <div class="max-w-[60%]">
+      <h2 class="text-[#0f292f] font-semibold text-lg mb-2">
+       Your Profile
+      </h2>
+      <p class="text-[#64748b] text-sm leading-relaxed">
+       Hi
+       <span class="font-semibold" id="profileUserName">
+        Student
+       </span>
+       , Today is 
+       <span class="font-semibold text-[#0b4dbd]" id="currentDateDisplay">Loading Date...</span>.
+       You have completed
+       <span class="font-semibold">
+        70%
+       </span>
+       of your weekly targets. Keep
+            learning with us like this.
+      </p>
+      <button class="mt-4 bg-yellow-400 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-md hover:bg-yellow-500 transition">
+       Set Goals
+      </button>
+     </div>
+     <img alt="Illustration of a person sitting with a laptop and a lightbulb above head representing ideas" class="w-[150px] h-[120px] object-contain" height="120" src="https://storage.googleapis.com/a1aa/image/b169b39f-b15f-4a88-f418-bd0e0e3c5920.jpg" width="150"/>
+    </section>
+    <section class="flex flex-col gap-4 max-w-full">
+     <div class="flex justify-between items-center">
+      <h3 class="text-[#0f292f] font-semibold text-base">
+       Your Activity
+      </h3>
+      <a class="text-[#0b4dbd] text-xs font-normal hover:underline" href="#">
+      </a>
+     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-full text-xs text-[#64748b]">
+<div class="bg-[#f1f5f9] rounded-lg p-4 flex flex-col items-center text-center">
+  <h4 class="text-[#0f292f] font-semibold text-sm mb-1">
+    ACADEMICS
+  </h4>
+  <p class="mb-2" id="academicInfo">Loading...</p> <img alt="Icon representing atom for English lesson 2" class="mx-auto mb-2" height="30" src="https://storage.googleapis.com/a1aa/image/74f0e8f2-0086-4e74-f99e-4f60ff0b3b01.jpg" width="30"/>
+  <div class="flex items-center gap-2 w-full justify-center">
+    <span class="bg-green-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
+      New
+    </span>
+    <i class="far fa-clock text-[#94a3b8] text-xs"></i>
+    <span class="text-[#94a3b8] text-[9px]" id="academicDate">
+      20th Jan 2020
+    </span>
+  </div>
+  <a href="academic-cards.html" class="mt-4 text-[#0b4dbd] text-xs font-normal hover:underline">View Details</a>
+</div>
+      <div class="bg-[#f1f5f9] rounded-lg p-4 flex flex-col items-center text-center">
+  <h4 class="text-[#0f292f] font-semibold text-sm mb-1">
+    EXTRACURRICULAR ACTIVITY
+  </h4>
+  <p class="mb-2">
+    Participation and Achievements
+  </p>
+  <img alt="Icon representing a flask for Mathematics III" class="mx-auto mb-2" height="30" src="https://storage.googleapis.com/a1aa/image/82575be1-9d0a-4ea0-64e4-8938cb1ea666.jpg" width="30" />
+  <div class="w-full bg-white rounded-full h-2.5 overflow-hidden">
+    <div class="bg-[#0b4dbd] h-2.5 rounded-full" style="width: 35%"></div>
+  </div>
+  <p class="text-[#0b4dbd] text-[9px] mt-1 font-semibold">
+    35%
+  </p>
+  <a href="extracurricular-card.html" class="mt-4 text-[#0b4dbd] text-xs font-normal hover:underline">View Details</a>
+</div>
+      <div class="bg-[#f1f5f9] rounded-lg p-4 flex flex-col items-center text-center">
+  <h4 class="text-[#0f292f] font-semibold text-sm mb-1">
+    PERSONAL INFORMATION
+  </h4>
+  <p class="mb-2" id="personalInfoSummary">
+    Important Details
+  </p>
+  <img alt="Icon representing a globe for Medieval History" class="mx-auto mb-2" height="30" src="https://storage.googleapis.com/a1aa/image/39a9a8f4-7fc6-4341-fba6-6d7cf87208c2.jpg" width="30"/>
+  <div class="w-full bg-white rounded-full h-2.5 overflow-hidden">
+    <div id="personalProgressBar" class="bg-[#0b4dbd] h-2.5 rounded-full" style="width: 80%"></div>
+  </div>
+  <p id="personalProgressText" class="text-[#0b4dbd] text-[9px] mt-1 font-semibold">
+    80%
+  </p>  
+  <a href="personal-card.html" class="mt-4 text-[#0b4dbd] text-xs font-normal hover:underline">
+    View Details
+  </a>
+</div>
+     </div>
+    </section>
+   </main>
+   <aside class="w-full md:w-64 bg-white rounded-b-3xl md:rounded-r-3xl md:rounded-bl-none p-6 flex flex-col gap-6">
+    <div class="flex justify-between items-center">
+     <button id="shareBtn" aria-label="Share" class="text-[#64748b] hover:text-[#0b4dbd] relative">
+      <i class="fas fa-share-alt text-lg">
+      </i>
+     </button>
+     <div class="relative">
+      <button id="profileEmojiBtn" class="w-10 h-10 rounded-full bg-[#0b4dbd] text-white text-xl flex items-center justify-center cursor-pointer hover:bg-blue-700 transition" title="Click to change emoji">
+       <span id="profileEmoji">😊</span>
+      </button>
+     </div>
+    </div>
+    <div class="border border-[#e2e8f0] rounded-lg p-4 text-center text-xs text-[#64748b]">
+      <div class="flex justify-between items-center mb-2 text-[11px] font-semibold text-[#0f292f]">
+       <button id="prevMonthBtn" aria-label="Previous month" class="text-[#64748b] hover:text-[#0b4dbd]">
+        <
+       </button>
+       <span id="calendarMonthYear">
+        January 2020
+       </span>
+       <button id="nextMonthBtn" aria-label="Next month" class="text-[#64748b] hover:text-[#0b4dbd]">
+        >
+       </button>
+      </div>
+      <table class="w-full text-center border-collapse text-[11px]">
+       <thead>
+        <tr class="text-[#94a3b8]">
+         <th>
+          Su
+         </th>
+         <th>
+          Mo
+         </th>
+         <th>
+          Tu
+         </th>
+         <th>
+          We
+         </th>
+         <th>
+          Th
+         </th>
+         <th>
+          Fr
+         </th>
+         <th>
+          Sa
+         </th>
+        </tr>
+       </thead>
+       <tbody id="calendarDates">
+        </tbody>
+      </table>
+     </div>
+     <section class="border border-[#e2e8f0] rounded-lg p-4 text-center text-xs text-[#0f292f]">
+      <h4 class="font-semibold mb-3">
+       Refer a Friend
+      </h4>
+      <p class="text-[#64748b] text-[10px] mb-3">
+       Share EduMatrix with friends and earn rewards!
+      </p>
+      <div id="referralLinkContainer" class="mb-3">
+        <input type="text" id="referralLink" readonly class="w-full bg-[#f1f5f9] border border-[#e2e8f0] rounded px-2 py-1 text-[10px] text-[#64748b] mb-2" value="https://edumatrix.com/ref/user123"/>
+        <button id="copyLinkBtn" class="bg-[#0b4dbd] text-white px-3 py-1 rounded text-[10px] hover:bg-blue-700 transition w-full">
+          <i class="fas fa-copy mr-1"></i> Copy Link
+        </button>
+      </div>
+      <div class="flex justify-center gap-3 mt-3">
+        <button id="shareWhatsApp" class="text-green-500 hover:text-green-700 text-lg" title="Share on WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+        <button id="shareFacebook" class="text-blue-600 hover:text-blue-800 text-lg" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </button>
+        <button id="shareTwitter" class="text-blue-400 hover:text-blue-600 text-lg" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </button>
+        <button id="shareLinkedIn" class="text-blue-700 hover:text-blue-900 text-lg" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </button>
+      </div>
+     </section>
+    </aside>
+   </div>
+   
+   <!-- Share Modal -->
+   <div id="shareModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+     <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4">
+      <div class="flex justify-between items-center mb-4">
+       <h3 class="text-lg font-semibold text-[#0f292f]">Share EduMatrix</h3>
+       <button id="closeShareModal" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times"></i>
+       </button>
+      </div>
+      <p class="text-sm text-[#64748b] mb-4">Share this website with your friends!</p>
+      <div class="flex justify-center gap-4 mb-4">
+       <button id="modalShareWhatsApp" class="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 transition">
+        <i class="fab fa-whatsapp text-xl"></i>
+       </button>
+       <button id="modalShareFacebook" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition">
+        <i class="fab fa-facebook text-xl"></i>
+       </button>
+       <button id="modalShareTwitter" class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition">
+        <i class="fab fa-twitter text-xl"></i>
+       </button>
+       <button id="modalShareLinkedIn" class="bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition">
+        <i class="fab fa-linkedin text-xl"></i>
+       </button>
+      </div>
+      <div class="flex items-center gap-2">
+       <input type="text" id="modalReferralLink" readonly class="flex-1 bg-[#f1f5f9] border border-[#e2e8f0] rounded px-3 py-2 text-sm" value="https://edumatrix.com/ref/user123"/>
+       <button id="modalCopyLink" class="bg-[#0b4dbd] text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        Copy
+       </button>
+      </div>
+     </div>
+   </div>
+
+   <!-- Emoji Picker Modal -->
+   <div id="emojiModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+     <div class="bg-white rounded-xl p-4 max-w-xs w-full mx-4">
+      <div class="flex justify-between items-center mb-3">
+       <h3 class="text-lg font-semibold text-[#0f292f]">Choose Your Emoji</h3>
+       <button id="closeEmojiModal" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times"></i>
+       </button>
+      </div>
+      <div class="grid grid-cols-6 gap-2 text-2xl text-center">
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="😊">😊</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="😄">😄</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="😎">😎</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🤓">🤓</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🚀">🚀</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="💡">💡</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🎯">🎯</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🏆">🏆</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="⭐">⭐</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🌟">🌟</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="💪">💪</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🎓">🎓</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="📚">📚</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🎨">🎨</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="⚽">⚽</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🎵">🎵</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🌈">🌈</button>
+       <button class="emoji-btn p-2 hover:bg-gray-100 rounded" data-emoji="🔥">🔥</button>
+      </div>
+     </div>
+   </div>
+
+   <!-- Set Goals Modal -->
+   <div id="goalsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+     <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+       <h3 class="text-xl font-semibold text-[#0f292f]">Set Your Goals</h3>
+       <button id="closeGoalsModal" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times"></i>
+       </button>
+      </div>
+      <form id="goalsForm" class="space-y-4">
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Academic Goal (SGPA Target)</label>
+        <input type="number" id="goalSgpa" step="0.01" min="0" max="10" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="e.g., 9.5">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Attendance Target (%)</label>
+        <input type="number" id="goalAttendance" min="0" max="100" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="e.g., 90">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Weekly Study Hours</label>
+        <input type="number" id="goalStudyHours" min="0" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="e.g., 20">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Books to Read This Semester</label>
+        <input type="number" id="goalBooks" min="0" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="e.g., 5">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Hackathons to Participate</label>
+        <input type="number" id="goalHackathons" min="0" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="e.g., 3">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Certificates to Earn</label>
+        <input type="number" id="goalCertificates" min="0" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="e.g., 4">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Personal Note</label>
+        <textarea id="goalNote" rows="2" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0b4dbd]" placeholder="Any additional goals or notes..."></textarea>
+       </div>
+       <button type="submit" class="w-full bg-[#0b4dbd] hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+        Save Goals
+       </button>
+      </form>
+      <div id="goalsDisplay" class="mt-4 hidden">
+       <h4 class="font-semibold text-[#0f292f] mb-2">Your Current Goals:</h4>
+       <div id="goalsList" class="text-sm text-gray-600 space-y-1"></div>
+      </div>
+     </div>
+   </div>
+
+   <script src="dashboard.js"></script>
+  </body>
+ </html>

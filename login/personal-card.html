@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Personal Information Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    /* BODY background */
+    body {
+      background: url('https://th.bing.com/th/id/OIP.tCbCGYzK6W1RVU3vOwSpKgHaEK?rs=1&pid=ImgDetMain') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container (Card Background) */
+    .container {
+      background: rgba(255, 255, 255, 0.7) url('https://th.bing.com/th/id/OIP.KHGfMo1BMngKCuZQtMTHIAAAAA?rs=1&pid=ImgDetMain') repeat;
+      background-blend-mode: lighten;
+      background-size: 300px 300px;
+      animation: moveBackground 40s linear infinite;
+
+      max-width: 900px;
+      width: 100%;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      position: relative;
+    }
+
+    @keyframes moveBackground {
+      0% {
+        background-position: 0 0;
+      }
+      50% {
+        background-position: 400px 200px;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+
+    /* Title */
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #4e148c;
+    }
+
+    /* Submitted Info Display */
+    .display-info {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s ease;
+    }
+
+    .display-info h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #4e148c;
+    }
+
+    #infoContent {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    #infoContent div {
+      background: #fdf6e3;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* New styles for the Edit button */
+    .button-group {
+        text-align: center; /* Center the button */
+        margin-top: 30px;
+    }
+
+    .button-group button {
+        background-color: #007bff; /* A nice blue color */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+    }
+
+    .button-group button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    /* Style for error message display */
+    .message {
+        margin-top: 20px;
+        color: red;
+        font-weight: bold;
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Submitted Personal Information</h1>
+    <div id="displayInfo" class="display-info">
+      <div id="infoContent">
+        <p class="message" id="errorMessage"></p>
+      </div>
+    </div>
+    <div class="button-group">
+        <button id="editInfoBtn">Edit Information</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const infoContent = document.getElementById('infoContent');
+      const errorMessage = document.getElementById('errorMessage');
+      const editInfoBtn = document.getElementById('editInfoBtn');
+
+      // --- 1. Get user_id from sessionStorage ---
+      const userId = sessionStorage.getItem('user_id');
+
+      if (!userId) {
+        errorMessage.textContent = 'User not logged in or user ID not found.';
+        console.error('User ID not found in sessionStorage.');
+        // Optionally redirect to login page if user_id is missing
+        // window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        // --- 2. Fetch data from the backend (NOT localStorage) ---
+        const response = await fetch(`http://localhost:3000/api/personal-info/${userId}`);
+        const result = await response.json();
+
+        if (response.ok && result.personalInfo) {
+          const data = result.personalInfo; // Access the personalInfo object from the response
+          console.log('Fetched personal info:', data);
+
+          // Clear any initial content or previous error messages
+          infoContent.innerHTML = '';
+          errorMessage.textContent = '';
+
+          // Function to create a display item, but only if the value is not empty or null
+          const createInfoItem = (key, value) => { // Renamed label to key for clarity with data object
+                    // Trim whitespace and check if value is not effectively empty
+                    if (value === null || value === undefined || String(value).trim() === '') {
+                        return ''; // Don't display this item if the value is empty
+                    }
+
+                    let displayValue = value;
+
+                    // --- IMPORTANT: Format DOB here ---
+                    if (key === 'dob') { // <--- Checks if the current item is 'dob'
+                        try {
+                            displayValue = new Date(value).toLocaleDateString(); // <--- Formats the date
+                        } catch (e) {
+                            console.error('Error formatting DOB:', value, e);
+                            displayValue = 'Invalid Date'; // Fallback for bad data
+                        }
+                    }
+
+                    // Format keys for display (e.g., 'full_name' becomes 'Full Name')
+                    const formattedLabel = key.replace(/_([a-z])/g, (g) => ` ${g[1].toUpperCase()}`).replace(/^./, (str) => str.toUpperCase());
+
+                    const div = document.createElement('div');
+                    div.textContent = `${formattedLabel}: ${displayValue}`; // <--- Uses the potentially formatted displayValue
+                    return div.outerHTML; // Return the HTML string
+                };
+
+          // Append all relevant fields to the infoContent div
+          infoContent.innerHTML += createInfoItem('full_name', data.full_name);
+          infoContent.innerHTML += createInfoItem('dob', data.dob);
+          infoContent.innerHTML += createInfoItem('gender', data.gender);
+          infoContent.innerHTML += createInfoItem('blood_group', data.blood_group);
+          infoContent.innerHTML += createInfoItem('email', data.email);
+          infoContent.innerHTML += createInfoItem('phone', data.phone);
+          infoContent.innerHTML += createInfoItem('alt_phone', data.alt_phone);
+          infoContent.innerHTML += createInfoItem('address', data.address);
+          infoContent.innerHTML += createInfoItem('city', data.city);
+          infoContent.innerHTML += createInfoItem('state', data.state);
+          infoContent.innerHTML += createInfoItem('zip', data.zip);
+          infoContent.innerHTML += createInfoItem('father_name', data.father_name);
+          infoContent.innerHTML += createInfoItem('father_phone', data.father_phone);
+          infoContent.innerHTML += createInfoItem('father_alt_phone', data.father_alt_phone);
+          infoContent.innerHTML += createInfoItem('mother_name', data.mother_name);
+          infoContent.innerHTML += createInfoItem('mother_phone', data.mother_phone);
+          infoContent.innerHTML += createInfoItem('mother_alt_phone', data.mother_alt_phone);
+          infoContent.innerHTML += createInfoItem('nationality', data.nationality);
+          infoContent.innerHTML += createInfoItem('aadhar', data.aadhar);
+          infoContent.innerHTML += createInfoItem('guardian_name', data.guardian_name);
+          infoContent.innerHTML += createInfoItem('guardian_relation', data.guardian_relation);
+          infoContent.innerHTML += createInfoItem('guardian_phone', data.guardian_phone);
+
+          // If no data was displayed (e.g., all fields were empty), show a message
+          if (infoContent.innerHTML === '') {
+              infoContent.innerHTML = '<p class="message">No personal information found for this user.</p>';
+          }
+
+
+        } else if (response.status === 404) {
+          errorMessage.textContent = 'No personal information found for this user. Please fill out the form.';
+          console.log('No personal info found for user:', userId);
+        } else {
+          errorMessage.textContent = result.message || 'Failed to retrieve personal info.';
+          console.error('Error fetching personal info from backend:', result.message);
+        }
+      } catch (error) {
+        errorMessage.textContent = 'An error occurred while connecting to the server.';
+        console.error('Network or parsing error during fetch:', error);
+      }
+
+      // --- 3. Edit Button Logic ---
+      editInfoBtn.addEventListener('click', () => {
+        // Redirect to personal.html, which will now pre-fill the form with existing data
+        window.location.href = 'personal.html';
+      });
+    });
+  </script>
+</body>
+</html>

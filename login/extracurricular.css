@@ -1,0 +1,295 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* BODY background */
+body {
+  background: url('https://png.pngtree.com/thumb_back/fh260/back_our/20190617/ourmid/pngtree-taobao-vector-cartoon-neat-study-desk-table-home-illustration-table-lamp-image_130341.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 40px 20px;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  display: block;
+}
+
+/* Floating animated background shapes */
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: floatUp 20s infinite ease-in-out;
+  filter: blur(10px);
+  bottom: -200px;
+}
+
+.circle1 {
+  width: 120px;
+  height: 120px;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.circle2 {
+  width: 80px;
+  height: 80px;
+  left: 45%;
+  animation-delay: 5s;
+}
+
+.circle3 {
+  width: 150px;
+  height: 150px;
+  left: 75%;
+  animation-delay: 10s;
+}
+
+@keyframes floatUp {
+  0% {
+    bottom: -200px;
+    transform: translateX(0) scale(1);
+  }
+  50% {
+    transform: translateX(50px) scale(1.1);
+  }
+  100% {
+    bottom: 100%;
+    transform: translateX(-20px) scale(1);
+  }
+}
+
+/* Container (Form Background) */
+.container {
+  background: rgba(255, 255, 255, 0.7) url('https://t3.ftcdn.net/jpg/02/78/52/28/240_F_278522829_XtMhHvtEKYYFhrEmRzhl1SDhtUT5eRM2.jpg') repeat;
+  background-blend-mode: lighten;
+  background-size: 300px 300px;
+  animation: moveBackground 40s linear infinite;
+
+  max-width: 1000px;
+  width: 100%;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
+  color: #4e148c;
+  font-family: 'Inter', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes moveBackground {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400px 200px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+  
+/* Buttons aligned in the second column */
+button, .next-btn, .back-btn {
+  margin-top: 10px;
+  padding: 14px 25px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+/* For multiple buttons (like next/back) side by side */
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* For form sections with multiple fields (fieldset) */
+form fieldset {
+  margin-bottom: 30px;
+  display: none; /* Controlled by JS */
+  animation: fadeIn 0.8s ease;
+}
+
+/* The active fieldset should always be block for animation */
+form fieldset.active {
+  display: block;
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #4e148c;
+}
+
+/* Progress Tracker */
+.progress-tracker {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Form Section (fieldset styles are already defined above) */
+/* The empty rule was here, remove it. */
+
+form legend {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #fdd835;
+  padding-bottom: 5px;
+  color: #444;
+}
+
+label {
+  display: block;
+  margin-bottom: 15px;
+}
+
+/* Inputs */
+input, textarea, select {
+  width: 90%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fefefe;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #fbc02d;
+  outline: none;
+  background-color: #fff9c4;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+button, .next-btn, .back-btn, .submit-btn {
+  padding: 14px 20px;
+  background-color: #fbc02d;
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover, .next-btn:hover, .back-btn:hover, .submit-btn:hover {
+  background-color: #f57f17;
+}
+
+/* Grid Layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  button, .next-btn, .back-btn, .submit-btn {
+    width: 100%;
+    margin-right: 0;
+    margin-top: 15px;
+  }
+    .button-group {
+        flex-direction: column;
+    }
+}
+
+/* Submitted Info Display */
+#summarySection {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1s ease;
+}
+
+
+#summarySection h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #4e148c;
+}
+
+#infoContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+#infoContent div {
+  background: #fdf6e3;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Edit Button */
+#editBtn {
+  margin-top: 20px;
+  background-color: #4e148c;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#editBtn:hover {
+  background-color: #36076f;
+}
+
+/* extracurricular.css */
+
+/* ... (rest of your CSS) ... */
+
+/* Ensure the main sections are initially hidden by default, JS will manage their visibility */
+#summarySection {
+    display: none; /* Add this line */
+}
+
+#formSection {
+    display: none;
+}

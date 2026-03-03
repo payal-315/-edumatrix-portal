@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Academic Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="academic.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Academic Information</h1>
+    <p class="message" id="formMessage"></p> <form id="academicForm">
+      <fieldset class="form-section" id="section1">
+        <legend>Student Details</legend>
+        <label>USN: <input type="text" name="usn" required></label>
+        <label>Name: <input type="text" name="name" required></label>
+        <label>Department: <input type="text" name="department" required></label>
+        <label>Semester:
+            <select name="semester" id="semesterSelect" required>
+                <option value="">Select Semester</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+            </select>
+        </label>
+        <button type="button" class="next-btn">Next</button>
+      </fieldset>
+
+      <fieldset class="form-section" id="section2" style="display: none;">
+  <legend>Marks (out of 100)</legend>
+  <div id="subjectsContainer" class="grid-layout">
+    <label id="label_sub1">Sub 1: <input type="number" name="sub1" max="100" min="0"></label>
+    <label id="label_sub2">Sub 2: <input type="number" name="sub2" max="100" min="0"></label>
+    <label id="label_sub3">Sub 3: <input type="number" name="sub3" max="100" min="0"></label>
+    <label id="label_sub4">Sub 4: <input type="number" name="sub4" max="100" min="0"></label>
+    <label id="label_sub5">Sub 5: <input type="number" name="sub5" max="100" min="0"></label>
+    <label id="label_sub6">Sub 6: <input type="number" name="sub6" max="100" min="0"></label>
+    <label id="label_sub7">Sub 7: <input type="number" name="sub7" max="100" min="0"></label>
+    <label id="label_sub8">Sub 8: <input type="number" name="sub8" max="100" min="0"></label>
+    <label id="label_sub9">Sub 9: <input type="number" name="sub9" max="100" min="0"></label>
+  </div>
+  <button type="button" class="back-btn">Back</button>
+  <button type="button" class="next-btn">Next</button>
+</fieldset>
+
+      <fieldset class="form-section" id="section3" style="display: none;">
+        <legend>Performance</legend>
+        <label>SGPA: <input type="number" name="sgpa" step="0.01" max="10" min="0" required></label>
+        <label>CGPA: <input type="number" name="cgpa" step="0.01" max="10" min="0" required></label>
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </fieldset>
+
+      <fieldset class="form-section" id="section4" style="display: none;">
+        <legend>Attendance</legend>
+        <label>Total Classes: <input type="number" name="total_classes" required></label>
+        <label>Attended Classes: <input type="number" name="attended_classes" required></label>
+        <label>Attendance %: <input type="number" name="attendance_percent" step="0.1" max="100" min="0" required></label>
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </fieldset>
+
+      <fieldset class="form-section" id="section5" style="display: none;">
+        <legend>Remarks & Additional Notes</legend>
+        <textarea name="remarks" rows="4" placeholder="Add remarks..." required></textarea>
+        <button type="button" class="back-btn">Back</button>
+        <button type="submit" id="submitAcademicBtn">Submit</button>
+      </fieldset>
+    </form>
+  </div>
+
+  <script src="academic.js"></script>
+</body>
+</html>

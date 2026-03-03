@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Extracurricular Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="extracurricular.css" />
+  <style>
+    .hackathon-group, .event-group, .award-group, .certificate-group {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .hackathon-group h4, .event-group h4, .award-group h4, .certificate-group h4 {
+      margin: 5px 0 10px 0;
+    }
+
+    /* Optional basic button style */
+    .btn {
+      padding: 10px 16px;
+      background-color: #4e148c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #36076f;
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-background">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+  </div>
+
+  <div class="container">
+    <h1>Extracurricular Details</h1>
+
+    <section id="summarySection">
+      <div class="card">
+        <h2>Summary</h2>
+        <p><strong>Hackathons Participated:</strong> <span id="summaryHackathons">Loading...</span></p>
+        <p><strong>Events Participated:</strong> <span id="summaryEvents">Loading...</span></p>
+        <p><strong>Awards Won:</strong> <span id="summaryAwards">Loading...</span></p>
+        <p><strong>Certificates Won:</strong> <span id="summaryCertificates">Loading...</span></p>
+        <button id="editBtn" class="btn">Edit Details</button>
+      </div>
+    </section>
+
+    <section id="formSection">
+      <form id="extracurricularForm">
+        <fieldset class="active">
+          <legend>Hackathons</legend>
+          <label>
+            Number of Hackathons Participated:
+            <input type="number" id="numHackathons" name="hackathons" min="0" required />
+          </label>
+          <div id="hackathonDetailsContainer"></div>
+          <div class="button-group">
+            <button type="button" class="next-btn">Next</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Events</legend>
+          <label>
+            Number of Events Participated:
+            <input type="number" id="numEvents" name="events" min="0" required />
+          </label>
+          <div id="eventDetailsContainer"></div>
+          <div class="button-group">
+            <button type="button" class="back-btn">Back</button>
+            <button type="button" class="next-btn">Next</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Awards</legend>
+          <label>
+            Number of Awards Won:
+            <input type="number" id="numAwards" name="awards" min="0" required />
+          </label>
+          <div id="awardDetailsContainer"></div>
+          <div class="button-group">
+            <button type="button" class="back-btn">Back</button>
+            <button type="button" class="next-btn">Next</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Certificates</legend>
+          <label>
+            Number of Certificates Won:
+            <input type="number" id="numCertificates" name="certificates" min="0" required />
+          </label>
+          <div id="certificateDetailsContainer"></div>
+          <div class="button-group">
+            <button type="button" class="back-btn">Back</button>
+            <button type="submit" class="submit-btn">Save Details</button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+  </div>
+
+  <script src="extracurricular.js"></script>
+</body>
+</html>
